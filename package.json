@@ -1,16 +1,13 @@
 {
-  "name": "my-backend-app",
+  "name": "node-backend",
   "version": "1.0.0",
-  "description": "A simple backend app connected to PostgreSQL",
-  "main": "app.js",
+  "description": "A Node.js backend app",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "pg": "^8.6.0"
-  },
-  "author": "Your Name",
-  "license": "ISC"
+    "pg": "^8.7.1"
+  }
 }
