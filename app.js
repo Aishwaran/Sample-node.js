@@ -5,21 +5,22 @@ const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Setup PostgreSQL connection
 const pool = new Pool({
-  host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
   database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
   port: 5432,
-  ssl: { rejectUnauthorized: false }
 });
 
-app.get('/health', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
-    await pool.query('SELECT 1');
-    res.status(200).json({ status: 'OK' });
+    const result = await pool.query('SELECT NOW()');
+    res.send(result.rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Database query error:', err);
+    res.status(500).send('Database error');
   }
 });
 
