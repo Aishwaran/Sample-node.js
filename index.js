@@ -9,18 +9,30 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: 5432,
-  ssl: {
-    rejectUnauthorized: false, // Required for AWS RDS SSL connections
-  },
+  ssl: { rejectUnauthorized: false },
 });
 
-app.get('/', async (req, res) => {
+app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+
+// Serve the HTML page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index1.html'));
+});
+
+// Handle form submission
+app.post('/add-employee', async (req, res) => {
+  const { name, age } = req.body;
+
+  if (!name || !age) {
+    return res.status(400).send('Name and age are required!');
+  }
+
   try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ message: 'Connected to database', time: result.rows[0] });
+    await pool.query('INSERT INTO employees (name, age) VALUES ($1, $2)', [name, age]);
+    res.send(`<h3>Employee Added Successfully!</h3> <a href="/">Go Back</a>`);
   } catch (error) {
-    console.error('Error executing query', error.stack);
-    res.status(500).json({ error: 'Database connection failed', details: error.message });
+    console.error('Database error:', error);
+    res.status(500).send('Error adding employee.');
   }
 });
 
