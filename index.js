@@ -9,15 +9,18 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false, // Required for AWS RDS SSL connections
+  },
 });
 
 app.get('/', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
-    res.send(result.rows[0]);
+    res.json({ message: 'Connected to database', time: result.rows[0] });
   } catch (error) {
     console.error('Error executing query', error.stack);
-    res.status(500).send('Database error');
+    res.status(500).json({ error: 'Database connection failed', details: error.message });
   }
 });
 
