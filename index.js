@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true })); // Middleware to parse form dat
 
 // Serve the HTML page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index1.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Handle form submission
